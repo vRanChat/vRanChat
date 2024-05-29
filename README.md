@@ -1,1 +1,4 @@
-# vRanChat
+# vranchat
+
+Random chatting for pets
+
