@@ -3,6 +3,9 @@
 
 ### Flutter ###
 # Flutter/Dart/Pub related
+.idea/misc.xml
+.idea/vcs.xml
+
 **/doc/api/
 .dart_tool/
 .flutter-plugins
