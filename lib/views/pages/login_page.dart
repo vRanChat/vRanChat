@@ -1,12 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../component/input_field.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  final TEST_ID = "test";
-  final TEST_PW = "1234";
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  void checkUserAndPassword(BuildContext context) async {
+    String enteredUsername = _usernameController.text;
+    String enteredPassword = _passwordController.text;
+
+    try {
+      // Firestore에서 users 컬렉션에서 username과 password가 일치하는 문서를 조회합니다.
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('mungnyan')
+          .where('id', isEqualTo: enteredUsername)
+          .where('password', isEqualTo: enteredPassword)
+          .get();
+
+      print(querySnapshot.docs.isNotEmpty);
+      // 조회된 문서가 하나라도 있는지 확인합니다.
+      if (querySnapshot.docs.isNotEmpty) {
+        // 로그인 성공 시 '/main' 페이지로 이동
+        Navigator.pushNamed(context, '/main');
+      } else {
+        // 일치하는 데이터가 없을 때 실행할 코드
+        print('No matching user found.');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('로그인 실패'),
+              content: const Text('올바른 ID와 PW를 입력하세요.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('확인'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
   LoginPage({super.key});
 
@@ -59,56 +103,38 @@ class LoginPage extends StatelessWidget {
               isPassword: true,
             ),
             const SizedBox(height: 10),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SizedBox(
-                  width: 120, // 첫 번째 텍스트의 너비 설정
-                  child: const Text(
+                const SizedBox(
+                  width: 120,
+                  child: Text(
                     '비밀번호 찾기',
-                    textAlign: TextAlign.center, // 텍스트를 중앙 정렬
+                    textAlign: TextAlign.center,
                   ),
                 ),
-                const SizedBox(width: 20), // 텍스트 사이에 간격 추가
+                SizedBox(width: 20),
                 SizedBox(
-                  width: 120, // 두 번째 텍스트의 너비 설정
-                  child: const Text(
-                    '회원가입',
-                    textAlign: TextAlign.center, // 텍스트를 중앙 정렬
+                  width: 120,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/signup');
+                    },
+                    child: const Text(
+                      '회원가입',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 10), // 상단 패딩 추가
             ElevatedButton(
-              onPressed: () {
-                String enteredUsername = _usernameController.text;
-                String enteredPassword = _passwordController.text;
-
-                // ID와 PW가 각각 "test"와 "1234"인 경우에만 메인 페이지로 이동
-                if (enteredUsername == TEST_ID && enteredPassword == TEST_PW) {
-                  Navigator.pushNamed(context, '/main');
-                } else {
-                  // 아니면 경고 메시지 출력 혹은 다른 조치를 취할 수 있음
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('로그인 실패'),
-                        content: const Text('올바른 ID와 PW를 입력하세요.'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('확인'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-              },
+              onPressed: () => checkUserAndPassword(context),
               // Expanded를 사용하여 버튼의 너비를 부모에 맞춤
               child: const SizedBox(
                 width: double.infinity, // 부모 위젯의 너비를 채움
@@ -118,15 +144,15 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 15), // 버튼 아래에 추가적인 공간을 주기 위한 패딩
+            const SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(width: 30),
                 Expanded(
                   child: Container(
-                    width: 50, // 원의 지름
-                    height: 50, // 원의 지름
+                    width: 50,
+                    height: 50,
                     decoration: const BoxDecoration(
                       color: Colors.green,
                       shape: BoxShape.circle,
@@ -135,8 +161,8 @@ class LoginPage extends StatelessWidget {
                 ),
                 Expanded(
                   child: Container(
-                    width: 50, // 원의 지름
-                    height: 50, // 원의 지름
+                    width: 50,
+                    height: 50,
                     decoration: const BoxDecoration(
                       color: Colors.yellow,
                       shape: BoxShape.circle,
@@ -145,8 +171,8 @@ class LoginPage extends StatelessWidget {
                 ),
                 Expanded(
                   child: Container(
-                    width: 50, // 원의 지름
-                    height: 50, // 원의 지름
+                    width: 50,
+                    height: 50,
                     decoration: const BoxDecoration(
                       color: Colors.pink,
                       shape: BoxShape.circle,
@@ -155,8 +181,8 @@ class LoginPage extends StatelessWidget {
                 ),
                 Expanded(
                   child: Container(
-                    width: 50, // 원의 지름
-                    height: 50, // 원의 지름
+                    width: 50,
+                    height: 50,
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,

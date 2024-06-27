@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "512341840743",
+    "project_id": "mungnyan-1961c",
+    "storage_bucket": "mungnyan-1961c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:512341840743:android:5e4fd1658a3c53128d95c2",
+        "android_client_info": {
+          "package_name": "xyz.vranchat.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNUo906mUZk4oWPcSjgdWQP2h-nQKMWvA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

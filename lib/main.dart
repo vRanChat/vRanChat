@@ -1,9 +1,21 @@
-import 'package:flutter/material.dart';
 import 'views/pages/login_page.dart';
 import 'views/pages/main_page.dart';
+import 'views/pages/signup_page.dart';
+import 'firebase_options.dart';
 
-void main() {
-  runApp(new MyApp());
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+
+Future<void> main() async {
+  // Ensure Flutter widget binding is initialized
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -19,6 +31,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => LoginPage(),
         '/main': (context) => MainPage(),
+        '/signup': (context) => SignupPage(),
       },
     );
   }
